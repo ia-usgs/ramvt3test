@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <header>
+        <!-- Header content goes here -->
+        <img src="{{ url_for('static', filename='ngc.jpg') }}" alt="User Dashboard">
+    </header>
+
+
+    <main>
+        <section class="cards">
+            <!-- Cards with summary or quick info -->
+            <div class="card">
+                <h2>Data Dashboard</h2>
+            <form method="post">
+                <button type="submit" class="btn btn-primary">Load Data</button>
+            </form>
+                {% if data_html %}
+                <div class="table-responsive">{{ data_html|safe }}</div>
+                    {% else %}
+                    <p>No data loaded yet.</p>
+                    {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Footer content goes here -->
+        <p></p>
+    </footer>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            sidebar.classList.toggle('collapsed');
+        }
+
+    </script>
+
+</body>
+</html>
