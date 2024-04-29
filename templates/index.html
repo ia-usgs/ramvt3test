@@ -17,16 +17,27 @@
     <main>
         <section class="cards">
             <!-- Cards with summary or quick info -->
+            <!-- This card displays the data dashboard -->
             <div class="card">
                 <h2>Data Dashboard</h2>
-            <form method="post">
-                <button type="submit" class="btn btn-primary">Load Data</button>
-            </form>
+                <!-- The form below allows users to load data -->
+                <form method="post">
+                    <!-- The buttons below allow users to load data -->
+                    <button type="submit" class="btn btn-primary" name ="button" value="Load Data 1">Load Data</button>
+                    <button type="submit" class="btn btn-secondary" name ="button" value="Load Data 2">Load Data</button>
+                    <button type="submit" class="btn btn-terdiary" name ="button" value="Load Data 3">Load Data</button>
+                </form>
+                <!-- Check if data has been loaded -->
                 {% if data_html %}
-                <div class="table-responsive">{{ data_html|safe }}</div>
-                    {% else %}
+                    <!-- If data has been loaded, display it in a table -->
+                    <div class="table-responsive">
+                        <!-- The |safe filter is used to render HTML content without escaping -->
+                        {{ data_html|safe }}
+                    </div>
+                {% else %}
+                    <!-- If no data has been loaded, display a message -->
                     <p>No data loaded yet.</p>
-                    {% endif %}
+                {% endif %}
             </div>
         </section>
     </main>
