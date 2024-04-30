@@ -7,7 +7,7 @@ import requests
 import logging
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:kali@localhost/ramtdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:kali@172.30.158.175:3306/ramtdb'
 db = SQLAlchemy(app)
 
 

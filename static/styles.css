@@ -5,7 +5,8 @@ body {
   color: #333;
 }
 
-h2 {
+
+h2, h1 {
   text-align: center;
 }
 
@@ -127,7 +128,7 @@ tr:nth-child(even) {
 
 /* Responsive table design */
 @media screen and (max-width: 600px) {
-  table, thead, tbody, th, td, tr {
+  table, thead, tbody, th, td, tr, .card {
     display: block;
   }
 
