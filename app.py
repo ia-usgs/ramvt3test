@@ -1,9 +1,14 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
+from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
+import requests
+import logging
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:kali@localhost/ramtdb'
+db = SQLAlchemy(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -39,8 +44,59 @@ def index():
     else:
         # If it's a GET request, render the index.html template without any data
         return render_template('index.html')
-    
+
+
+
+class User(db.Model):
+    # The __tablename__ attribute sets the name of the database table
+    # to 'users'.
+    __tablename__ = 'ramt_license_usage'
+
+    license_usage_id = db.Column(db.Integer, primary_key=True)
+
+
+    # The 'id' column is the primary key of the 'users' table.
+    # It is an integer column.
+    daemon_name = db.Column(db.Integer)
+
+    # The 'name' column stores the name of the user.
+    # It is a string column with a maximum length of 50 characters.
+    feature_name = db.Column(db.String(50))
+
+    # The 'age' column stores the age of the user.
+    # It is a string column with a maximum length of 50 characters.
+    licenses_total = db.Column(db.String(50))
+
+    # The 'address' column stores the address of the user.
+    # It is a string column with a maximum length of 50 characters.
+    licenses_total_in_use = db.Column(db.String(50))
+
+    # The 'salary' column stores the salary of the user.
+    # It is a string column with a maximum length of 50 characters.
+    licenses_total = db.Column(db.String(50))
+
+    licenses_used_by_user = db.Column(db.Integer)
+
+
+@app.route('/table_data/ramt_license_usage')
+def table_data():
+    users = User.query.all()
+    data = [
+        {
+            'license_usage_id': user.license_usage_id,
+            'daemon_name': user.daemon_name,
+            'feature_name': user.feature_name,
+            'licenses_total': user.licenses_total,
+            'licenses_total_in_use': user.licenses_total_in_use,
+            'licenses_used_by_user': user.licenses_used_by_user,
+        }
+        for user in users
+    ]
+    return jsonify(data)
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('FLASK_PORT', 8080))
     app.run(port=port, host='0.0.0.0', debug=True)
+
+

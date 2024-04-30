@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+    
 </head>
-<body>
+<body onload="updateTime()">
 
     <header>
         <!-- Header content goes here -->
@@ -15,31 +17,29 @@
 
 
     <main>
-        <section class="cards">
-            <!-- Cards with summary or quick info -->
-            <!-- This card displays the data dashboard -->
-            <div class="card">
-                <h2>Data Dashboard</h2>
-                <!-- The form below allows users to load data -->
-                <form method="post">
-                    <!-- The buttons below allow users to load data -->
-                    <button type="submit" class="btn btn-primary" name ="button" value="Load Data 1">RAMTv3 Sample Data</button>
-                    <button type="submit" class="btn btn-secondary" name ="button" value="Load Data 2">asdsls30 Sample Data</button>
-                    <button type="submit" class="btn btn-terdiary" name ="button" value="Load Data 3">sarebraslic81 Sample Data</button>
-                </form>
-                <!-- Check if data has been loaded -->
-                {% if data_html %}
-                    <!-- If data has been loaded, display it in a table -->
-                    <div class="table-responsive">
-                        <!-- The |safe filter is used to render HTML content without escaping -->
-                        {{ data_html|safe }}
-                    </div>
-                {% else %}
-                    <!-- If no data has been loaded, display a message -->
-                    <p>No data loaded yet.</p>
-                {% endif %}
-            </div>
+
+
+        <section>
+            <h1><div id="currentTime"></div></h1>
+            <h1><button onclick="fetchTableData()">Fetch Data</button></h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>DAEMON NAME</th>
+                        <th>FEATURE NAME</th>
+                        <th>TOTAL LICENSES</th>
+                        <th>MAX LICENSES USED</th>
+                        <th>AVERAGE LICENSES USED</th>
+                        <th>UNIQUE USERS</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Table rows will be dynamically inserted here -->
+                </tbody>
+            </table>
         </section>
+
     </main>
 
     <footer>
@@ -53,7 +53,41 @@
             sidebar.classList.toggle('collapsed');
         }
 
+        function fetchTableData() {
+            fetch('/table_data/ramt_license_usage')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#table-body');
+                    tableBody.innerHTML = ''; // Clear existing data
+
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.license_usage_id}</td>
+                            <td>${row.daemon_name}</td>
+                            <td>${row.feature_name}</td>
+                            <td>${row.licenses_total}</td>
+                            <td>${row.licenses_total_in_use}</td>
+                            <td>${row.licenses_total}</td>
+                            <td>${row.licenses_used_by_user}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.error('Failed to fetch data:', error));
+        }
+
+        function updateTime() {
+            var currentDate = new Date();
+            var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            var timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            var formattedDate = currentDate.toLocaleDateString('en-US', dateOptions);
+            var formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
+            document.getElementById('currentTime').innerHTML = "Report Start Date: " + formattedDate + " " + formattedTime;
+        }
     </script>
 
 </body>
 </html>
+
+
