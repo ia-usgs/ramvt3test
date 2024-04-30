@@ -21,7 +21,11 @@
 
         <section>
             <h1><div id="currentTime"></div></h1>
-            <h1><button onclick="fetchTableData()">Fetch Data</button></h1>
+    <h1><button onclick="fetchTableData()">Fetch Data</button></h1>
+    <h1><div class="search-container">
+        <input type="text" id="searchInput" placeholder="Filter by..">
+        <button onclick="fetchTableData()">Search</button>
+    </div></h1>
             <table>
                 <thead>
                     <tr>
@@ -54,29 +58,37 @@
         }
 
         function fetchTableData() {
-            fetch('/table_data/ramt_license_usage')
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.querySelector('#table-body');
-                    tableBody.innerHTML = ''; // Clear existing data
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.toLowerCase();
+    const filterSelect = document.getElementById('filterSelect');
+    const filterValue = filterSelect.value.toLowerCase();
 
-                    data.forEach(row => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${row.license_usage_id}</td>
-                            <td>${row.daemon_name}</td>
-                            <td>${row.feature_name}</td>
-                            <td>${row.licenses_total}</td>
-                            <td>${row.licenses_total_in_use}</td>
-                            <td>${row.licenses_total}</td>
-                            <td>${row.licenses_used_by_user}</td>
-                        `;
-                        tableBody.appendChild(tr);
-                    });
-                })
-                .catch(error => console.error('Failed to fetch data:', error));
-        }
+    fetch('/table_data/ramt_license_usage' + (searchTerm ? `?search=${searchTerm}` : '') + (filterValue ? `&filter=${filterValue}` : ''))
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#table-body');
+            tableBody.innerHTML = ''; // Clear existing data
 
+            data.forEach(row => {
+                if (searchTerm && !row[filterValue].toLowerCase().includes(searchTerm)) {
+                    return; // Skip rows that don't match the search term
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.license_usage_id}</td>
+                    <td>${row.daemon_name}</td>
+                    <td>${row.feature_name}</td>
+                    <td>${row.licenses_total}</td>
+                    <td>${row.licenses_total_in_use}</td>
+                    <td>${row.licenses_total}</td>
+                    <td>${row.licenses_used_by_user}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        })
+        .catch(error => console.error('Failed to fetch data:', error));
+}
         function updateTime() {
             var currentDate = new Date();
             var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -85,6 +97,38 @@
             var formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
             document.getElementById('currentTime').innerHTML = "Report Start Date: " + formattedDate + " " + formattedTime;
         }
+
+        function fetchTableData() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.toLowerCase();
+
+    fetch('/table_data/ramt_license_usage' + (searchTerm ? `?search=${searchTerm}` : ''))
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#table-body');
+            tableBody.innerHTML = ''; // Clear existing data
+
+            data.forEach(row => {
+                if (searchTerm && !row.daemon_name.toLowerCase().includes(searchTerm) && !row.feature_name.toLowerCase().includes(searchTerm)) {
+                    return; // Skip rows that don't match the search term
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.license_usage_id}</td>
+                    <td>${row.daemon_name}</td>
+                    <td>${row.feature_name}</td>
+                    <td>${row.licenses_total}</td>
+                    <td>${row.licenses_total_in_use}</td>
+                    <td>${row.licenses_total}</td>
+                    <td>${row.licenses_used_by_user}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        })
+        .catch(error => console.error('Failed to fetch data:', error));
+}
+        
     </script>
 
 </body>
