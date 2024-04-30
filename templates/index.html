@@ -70,7 +70,8 @@
             tableBody.innerHTML = ''; // Clear existing data
 
             data.forEach(row => {
-                if (searchTerm && !row[filterValue].toLowerCase().includes(searchTerm)) {
+                const rowValue = String(row[filterValue]).toLowerCase();
+                if (searchTerm && rowValue.indexOf(searchTerm) === -1) {
                     return; // Skip rows that don't match the search term
                 }
 
