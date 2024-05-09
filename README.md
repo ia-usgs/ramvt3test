@@ -1,18 +1,43 @@
-# Creating an application with a Python code sample
+RAMTv3 Dashboard
+This is a user dashboard application that displays license usage data in an HTML table. It allows users to load CSV files containing license usage data, visualize the data, and access the data through an API.
 
-**Note:** The Python code sample uses the **8081** HTTP port.
+Installation
+To run the application locally, follow these steps:
 
-Before you begin creating an application with this `devfile` code sample, it's helpful to understand the relationship between the `devfile` and `Dockerfile` and how they contribute to your build. You can find these files at the following URLs:
+Clone the repository: git clone https://github.com/ia-usgs/ramvt3test.git
+Navigate to the project directory: cd user-dashboard
+Create a virtual environment: python -m venv env
+Activate the virtual environment:
+On Windows: env\Scripts\activate
+On macOS and Linux: source env/bin/activate
+Install the required dependencies: pip install -r requirements.txt
+Set up the database:
+Create a database and update the database configuration in config.py.
+Make sure the database is properly configured and accessible.
+Run the application: python app.py
+Open a web browser and navigate to http://localhost:8080 to access the application.
 
-* [Python `devfile.yaml`](https://github.com/devfile-samples/devfile-sample-python-basic/blob/main/devfile.yaml)
-* [Python `Dockerfile`](https://github.com/devfile-samples/devfile-sample-python-basic/blob/main/docker/Dockerfile)
+Usage
+Load CSV files:
+Navigate to the home page (http://localhost:8080).
+Click on one of the "Load Data" buttons to load a CSV file containing license usage data.
+The data will be displayed in an HTML table.
+Visualize the data:
+The loaded CSV file is displayed in an HTML table on the home page.
+The table shows the license usage data for each row in the CSV file.
+You can filter and sort the table using the provided options.
+Access the API:
+The application also provides an API endpoint for retrieving the license usage data.
+To access the API, navigate to http://localhost:8080/table_data/ramt_license_usage.
+The API returns the license usage data in JSON format.
+You can use this endpoint to integrate the application with other systems or build custom visualizations.
 
-1. The `devfile.yaml` file has an [`image-build` component](https://github.com/devfile-samples/devfile-sample-python-basic/blob/main/devfile.yaml#L24-L30) that points to your `Dockerfile`.
-2. The [`docker/Dockerfile`](https://github.com/devfile-samples/devfile-sample-python-basic/blob/main/docker/Dockerfile) contains the instructions you need to build the code sample as a container image.
-3. The `devfile.yaml` [`kubernetes-deploy` component](https://github.com/devfile-samples/devfile-sample-python-basic/blob/main/devfile.yaml#L31-L43) points to a `deploy.yaml` file that contains instructions for deploying the built container image.
-4. The `devfile.yaml` [`deploy` command](https://github.com/devfile-samples/devfile-sample-python-basic/blob/main/devfile.yaml#L51-L59) completes the [outerloop](https://devfile.io/docs/2.2.0/innerloop-vs-outerloop) deployment phase by pointing to the `image-build` and `kubernetes-deploy` components to create your application.
+Contributing
+Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
 
-### Additional resources
-* For more information about Python, see [Python](https://www.python.org/).
-* For more information about devfiles, see [Devfile.io](https://devfile.io/).
-* For more information about Dockerfiles, see [Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
+Technologies Used
+Flask: A Python web framework for building web applications.
+SQLAlchemy: A Python SQL toolkit and Object-Relational Mapping (ORM) library.
+HTML: Hypertext Markup Language for structuring the content of the web page.
+CSS: Cascading Style Sheets for styling the web page.
+JavaScript: A programming language for adding interactivity to the web page.
