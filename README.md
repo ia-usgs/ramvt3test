@@ -61,4 +61,4 @@ Contributions are welcome! Feel free to open pull requests with new features, fi
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the Apache License 2.0. See `LICENSE` for more information.
