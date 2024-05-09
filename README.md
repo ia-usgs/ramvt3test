@@ -1,43 +1,65 @@
-RAMTv3 Dashboard
-This is a user dashboard application that displays license usage data in an HTML table. It allows users to load CSV files containing license usage data, visualize the data, and access the data through an API.
+# License Usage Dashboard
 
-Installation
-To run the application locally, follow these steps:
+## Overview
 
-Clone the repository: git clone https://github.com/ia-usgs/ramvt3test.git
-Navigate to the project directory: cd user-dashboard
-Create a virtual environment: python -m venv env
-Activate the virtual environment:
-On Windows: env\Scripts\activate
-On macOS and Linux: source env/bin/activate
-Install the required dependencies: pip install -r requirements.txt
-Set up the database:
-Create a database and update the database configuration in config.py.
-Make sure the database is properly configured and accessible.
-Run the application: python app.py
-Open a web browser and navigate to http://localhost:8080 to access the application.
+This Flask application provides a dashboard for managing and viewing software license usage. It includes features to display data about license utilization per feature and daemon, enabling users to see total licenses, licenses in use, and licenses utilized by individual users.
 
-Usage
-Load CSV files:
-Navigate to the home page (http://localhost:8080).
-Click on one of the "Load Data" buttons to load a CSV file containing license usage data.
-The data will be displayed in an HTML table.
-Visualize the data:
-The loaded CSV file is displayed in an HTML table on the home page.
-The table shows the license usage data for each row in the CSV file.
-You can filter and sort the table using the provided options.
-Access the API:
-The application also provides an API endpoint for retrieving the license usage data.
-To access the API, navigate to http://localhost:8080/table_data/ramt_license_usage.
-The API returns the license usage data in JSON format.
-You can use this endpoint to integrate the application with other systems or build custom visualizations.
+## Features
 
-Contributing
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+- **Web Interface:** A user-friendly web interface to view and filter license usage data dynamically.
+- **Database Interaction:** Utilizes SQLAlchemy for ORM-based interactions with a MySQL database, ensuring efficient data handling.
+- **Data Visualization:** Displays data in a tabular format that can be filtered based on user inputs.
+- **Dynamic Data Loading:** Supports loading data dynamically based on user interactions without the need to reload the page.
 
-Technologies Used
-Flask: A Python web framework for building web applications.
-SQLAlchemy: A Python SQL toolkit and Object-Relational Mapping (ORM) library.
-HTML: Hypertext Markup Language for structuring the content of the web page.
-CSS: Cascading Style Sheets for styling the web page.
-JavaScript: A programming language for adding interactivity to the web page.
+## Installation
+
+Follow these steps to set up and run the application locally:
+
+### Prerequisites
+
+- Python 3.6+
+- Flask
+- Flask-SQLAlchemy
+- Pandas
+- MySQL Database
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/ia-usgs/ramvt3test.git
+   cd license-usage-dashboard
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Configure the database connection:**
+   - Modify the `SQLALCHEMY_DATABASE_URI` in your application to point to your MySQL instance.
+
+4. **Initialize the database:**
+   - Ensure your MySQL server is running and the database schema is set up.
+
+5. **Run the application:**
+   ```bash
+   python app.py
+   ```
+
+## Usage
+
+Once the application is running, navigate to `http://localhost:8080` to access the dashboard. You can interact with the data through the provided web interface.
+
+## API Endpoints
+
+- **GET `/table_data/ramt_license_usage`**: Fetches all license usage data.
+- **POST `/`**: Allows uploading and processing CSV data files to view data in the dashboard.
+
+## Contributing
+
+Contributions are welcome! Feel free to open pull requests with new features, fixes, or improvements.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
