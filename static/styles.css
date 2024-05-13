@@ -1,3 +1,4 @@
+/* Body style */
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -5,11 +6,12 @@ body {
   color: #333;
 }
 
-
+/* Center alignment for h2 and h1 */
 h2, h1 {
   text-align: center;
 }
 
+/* NGC image style */
 #ngc {
   display: block;
   margin-left: auto;
@@ -18,6 +20,7 @@ h2, h1 {
   height: 15%;
 }
 
+/* Header style */
 header {
   background-color: #094b91;
   color: white;
@@ -25,6 +28,7 @@ header {
   text-align: center;
 }
 
+/* Sidebar style */
 aside {
   background-color: #333;
   color: white;
@@ -36,15 +40,18 @@ aside {
   width: 100px; /* Fixed width */
 }
 
+/* Sidebar style when collapsed */
 aside.collapsed {
   width: 80px; /* Smaller width when collapsed */
 }
 
+/* Sidebar navigation list style */
 aside nav ul {
   list-style-type: none;
   padding: 0;
 }
 
+/* Sidebar navigation link style */
 aside nav ul li a {
   color: white;
   text-decoration: none;
@@ -52,11 +59,13 @@ aside nav ul li a {
   display: block;
 }
 
+/* Main content style */
 main {
  /* Give space for the fixed sidebar */
   padding: 20px;
 }
 
+/* Card style */
 .card {
   background-color: #ffffff;
   padding: 20px;
@@ -64,24 +73,7 @@ main {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#sidebar-toggle {
-  background-color: transparent;
-  color: #fff;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-#sidebar-toggle:after {
-  content: '\2261'; /* Hamburger icon */
-  display: block;
-}
-
-aside.collapsed #sidebar-toggle:after {
-  content: '\2039'; /* Single left-pointing angle quotation mark */
-}
-
+/* Responsive style for sidebar and main content */
 @media (max-width: 768px) {
   aside, main {
     width: 100%;
@@ -103,7 +95,7 @@ aside.collapsed #sidebar-toggle:after {
   }
 }
 
-/* Table styling */
+/* Table style */
 table {
   width: 100%;
   margin-top: 20px;
@@ -111,17 +103,20 @@ table {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow around the table */
 }
 
+/* Table header and data cell style */
 th, td {
   text-align: left;
   padding: 12px;
   border-bottom: 1px solid #ddd;
 }
 
+/* Table header style */
 th {
   background-color: #4CAF50;
   color: white;
 }
 
+/* Table even row style */
 tr:nth-child(even) {
   background-color: #f2f2f2;
 }
@@ -152,4 +147,20 @@ tr:nth-child(even) {
   th::before {
     content: ""; /* No content needed before headers */
   }
+}
+
+/* Navbar style */
+.navbar {
+  justify-content: center;
+}
+
+/* Search input style */
+#searchInput {
+  width: 120px;
+  margin: 0 auto;
+}
+
+/* Current time style */
+#currentTime {
+  font-size: 0.8em;
 }

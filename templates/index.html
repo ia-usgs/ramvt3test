@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-
     
 </head>
 <body onload="updateTime()">
 
     <header>
         <!-- Header content goes here -->
-        <img src="{{ url_for('static', filename='ngc.jpg') }}" alt="User Dashboard">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-darker-blue">
+            <img src="{{ url_for('static', filename='ngc.jpg') }}" alt="User Dashboard">
+        </nav>
     </header>
 
-
     <main>
-
-
-        <section>
+        <section class="container mt-4">
             <h1><div id="currentTime"></div></h1>
-    <h1><button onclick="fetchTableData()">Fetch Data</button></h1>
-    <h1><div class="search-container">
-        <input type="text" id="searchInput" placeholder="Filter by..">
-        <button onclick="fetchTableData()">Search</button>
-    </div></h1>
-            <table>
+            <div class="input-group mb-3">
+                <input type="text" id="searchInput" placeholder="Filter by.." class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-primary btn-sm" onclick="fetchTableData()">Search</button>
+                </div>
+            </div>
+            <table class="table table-striped mt-4">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -46,50 +47,43 @@
 
     </main>
 
-    <footer>
+    <footer class="container-fluid bg-light p-3">
         <!-- Footer content goes here -->
         <p></p>
     </footer>
 
     <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('aside');
-            sidebar.classList.toggle('collapsed');
+        function fetchTableData() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+
+            fetch('/table_data/ramt_license_usage' + (searchTerm ? `?search=${searchTerm}` : ''))
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#table-body');
+                    tableBody.innerHTML = ''; // Clear existing data
+
+                    data.forEach(row => {
+                        if (searchTerm && !row.daemon_name.toLowerCase().includes(searchTerm) && !row.feature_name.toLowerCase().includes(searchTerm)) {
+                            return; // Skip rows that don't match the search term
+                        }
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row.license_usage_id}</td>
+                            <td>${row.daemon_name}</td>
+                            <td>${row.feature_name}</td>
+                            <td>${row.licenses_total}</td>
+                            <td>${row.licenses_total_in_use}</td>
+                            <td>${row.licenses_total}</td>
+                            <td>${row.licenses_used_by_user}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.error('Failed to fetch data:', error));
         }
 
-        function fetchTableData() {
-    const searchInput = document.getElementById('searchInput');
-    const searchTerm = searchInput.value.toLowerCase();
-    const filterSelect = document.getElementById('filterSelect');
-    const filterValue = filterSelect.value.toLowerCase();
-
-    fetch('/table_data/ramt_license_usage' + (searchTerm ? `?search=${searchTerm}` : '') + (filterValue ? `&filter=${filterValue}` : ''))
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#table-body');
-            tableBody.innerHTML = ''; // Clear existing data
-
-            data.forEach(row => {
-                const rowValue = String(row[filterValue]).toLowerCase();
-                if (searchTerm && rowValue.indexOf(searchTerm) === -1) {
-                    return; // Skip rows that don't match the search term
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.license_usage_id}</td>
-                    <td>${row.daemon_name}</td>
-                    <td>${row.feature_name}</td>
-                    <td>${row.licenses_total}</td>
-                    <td>${row.licenses_total_in_use}</td>
-                    <td>${row.licenses_total}</td>
-                    <td>${row.licenses_used_by_user}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        })
-        .catch(error => console.error('Failed to fetch data:', error));
-}
         function updateTime() {
             var currentDate = new Date();
             var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -98,41 +92,11 @@
             var formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
             document.getElementById('currentTime').innerHTML = "Report Start Date: " + formattedDate + " " + formattedTime;
         }
-
-        function fetchTableData() {
-    const searchInput = document.getElementById('searchInput');
-    const searchTerm = searchInput.value.toLowerCase();
-
-    fetch('/table_data/ramt_license_usage' + (searchTerm ? `?search=${searchTerm}` : ''))
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#table-body');
-            tableBody.innerHTML = ''; // Clear existing data
-
-            data.forEach(row => {
-                if (searchTerm && !row.daemon_name.toLowerCase().includes(searchTerm) && !row.feature_name.toLowerCase().includes(searchTerm)) {
-                    return; // Skip rows that don't match the search term
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.license_usage_id}</td>
-                    <td>${row.daemon_name}</td>
-                    <td>${row.feature_name}</td>
-                    <td>${row.licenses_total}</td>
-                    <td>${row.licenses_total_in_use}</td>
-                    <td>${row.licenses_total}</td>
-                    <td>${row.licenses_used_by_user}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        })
-        .catch(error => console.error('Failed to fetch data:', error));
-}
-        
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
 </html>
-
 
