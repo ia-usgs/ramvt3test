@@ -26,6 +26,23 @@
                 <div class="input-group-append">
                     <button class="btn btn-primary btn-sm" onclick="fetchTableData()">Search</button>
                 </div>
+                <div class="input-group-append">
+                    <select id="sortBy" class="form-control">
+                        <option value="">Sort By</option>
+                        <option value="daemon_name">Daemon Name</option>
+                        <option value="feature_name">Feature Name</option>
+                        <option value="licenses_total">Total Licenses</option>
+                        <option value="licenses_total_in_use">Max Licenses Used</option>
+                        <option value="licenses_used_by_user">Average Licenses Used</option>
+                        <option value="unique_users">Unique Users</option>
+                    </select>
+                </div>
+                <div class="input-group-append">
+                    <select id="sortOrder" class="form-control">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
             </div>
             <table class="table table-striped mt-4">
                 <thead>
@@ -57,11 +74,51 @@
             const searchInput = document.getElementById('searchInput');
             const searchTerm = searchInput.value.toLowerCase();
 
-            fetch('/table_data/ramt_license_usage' + (searchTerm ? `?search=${searchTerm}` : ''))
+            const sortBy = document.getElementById('sortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            const url = `/table_data/ramt_license_usage${searchTerm ? `?search=${searchTerm}` : ''}${sortBy ? `?sortBy=${sortBy}&sortOrder=${sortOrder}` : ''}`;
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const tableBody = document.querySelector('#table-body');
                     tableBody.innerHTML = ''; // Clear existing data
+
+                    data.sort((a, b) => {
+                        if (sortBy === 'daemon_name') {
+                            const nameA = a.daemon_name.toLowerCase();
+                            const nameB = b.daemon_name.toLowerCase();
+                            if (nameA < nameB) {
+                                return sortOrder === 'asc' ? -1 : 1;
+                            }
+                            if (nameA > nameB) {
+                                return sortOrder === 'asc' ? 1 : -1;
+                            }
+                            return 0;
+                        } else if (sortBy === 'feature_name') {
+                            const nameA = a.feature_name.toLowerCase();
+                            const nameB = b.feature_name.toLowerCase();
+                            if (nameA < nameB) {
+                                return sortOrder === 'asc' ? -1 : 1;
+                            }
+                            if (nameA > nameB) {
+                                return sortOrder === 'asc' ? 1 : -1;
+                            }
+                            return 0;
+                        } else if (sortBy) {
+                            const valueA = a[sortBy].toLowerCase();
+                            const valueB = b[sortBy].toLowerCase();
+                            if (valueA < valueB) {
+                                return sortOrder === 'asc' ? -1 : 1;
+                            }
+                            if (valueA > valueB) {
+                                return sortOrder === 'asc' ? 1 : -1;
+                            }
+                            return 0;
+                        }
+                        return 0; // Default sorting order
+                    });
 
                     data.forEach(row => {
                         if (searchTerm && !row.daemon_name.toLowerCase().includes(searchTerm) && !row.feature_name.toLowerCase().includes(searchTerm)) {
@@ -75,8 +132,8 @@
                             <td>${row.feature_name}</td>
                             <td>${row.licenses_total}</td>
                             <td>${row.licenses_total_in_use}</td>
-                            <td>${row.licenses_total}</td>
                             <td>${row.licenses_used_by_user}</td>
+                            <td>${row.unique_users}</td>
                         `;
                         tableBody.appendChild(tr);
                     });
