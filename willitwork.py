@@ -159,11 +159,23 @@ def convert_date_format(date_str):
 df['EXPIRATION_DATE'] = df['EXPIRATION_DATE'].apply(lambda x: convert_date_format(str(x).strip("[]").replace("'", "")) if pd.notna(x) else None)
 df['INCREMENT_EXPIRATION_DATE'] = df['INCREMENT_EXPIRATION_DATE'].apply(lambda x: convert_date_format(str(x).strip("[]").replace("'", "")) if pd.notna(x) else None)
 
+# Combine FEATURE and INCREMENT columns
+df['FEATURE_INCREMENT'] = df['FEATURE'] + ' ' + df['INCREMENT']
+
+# Combine EXPIRATION_DATE and INCREMENT_EXPIRATION_DATE columns
+df['COMBINED_EXPIRATION_DATE'] = df.apply(
+    lambda row: row['EXPIRATION_DATE'] if row['EXPIRATION_DATE'] else row['INCREMENT_EXPIRATION_DATE'],
+    axis=1
+)
+
+# Print the first few rows to ensure the data is correct
+print(df.head())
+
 # Define a function to generate SQL insert statements without specifying the primary key
 def generate_sql_insert(df):
     sql_queries = []
     for index, row in df.iterrows():
-        expiration_date = f"'{row['EXPIRATION_DATE']}'" if row['EXPIRATION_DATE'] else 'NULL'
+        expiration_date = f"'{row['COMBINED_EXPIRATION_DATE']}'" if row['COMBINED_EXPIRATION_DATE'] else 'NULL'
         sql_query = f"""
         INSERT INTO ramt_license_usage (
             retrieval_time, user_name, host_name, licenses_used_by_user,
@@ -171,7 +183,7 @@ def generate_sql_insert(df):
             daemon_name, server_master_port, server_master_host, server_port, server_host,
             expiration_date
         ) VALUES (
-            NOW(), 'user_{index}', 'host_{index}', '{row['FEATURE']}',
+            NOW(), 'user_{index}', 'host_{index}', '{row['FEATURE_INCREMENT']}',
             'NO', '10', '5', '{row['INCREMENT']}', '1.0',
             'daemon_{index}', '1234', 'master_host_{index}', '5678', 'host_{index}',
             {expiration_date}
