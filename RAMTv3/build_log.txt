@@ -1,0 +1,83 @@
+northgrum\m25564
+
+
+2021-10-19T11:50:13
+
+On branch mp-ramtv3
+Your branch is up-to-date with 'origin/mp-ramtv3'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   ramt/version.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+* commit 59a283419c1078cc3af81050bda397719a4d6c9d
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Tue Oct 19 10:54:45 2021 -0700
+| 
+|     Fix Covarity vulnerability reports
+| 
+* commit 59155af5a702cdc7cca270a48125216788367672
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Tue Oct 12 14:57:54 2021 -0700
+| 
+|     Add Michael Banados' feedback
+|     
+|     - Add network field to config
+|     - Add clarification about report dates
+|     - Add clarification about python install
+|     - Remove .pyc files from dist
+| 
+* commit 2cc23f2ae25e2795d217d418cc2f03a673f653be
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Fri Oct 8 14:02:26 2021 -0700
+| 
+|     Go-backs from Jason
+| 
+* commit 12e5ceea0e23e1d69e8918f4e0eb54c8aed2e8fb
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Fri Oct 8 09:42:21 2021 -0700
+| 
+|     Add the version number to the reports. User Story 591955
+|     
+|     Update reporter.py
+| 
+* commit 4a589d09d4c834c64b445ff4c80180376ac9e41a
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Tue Oct 5 17:28:56 2021 -0700
+| 
+|     Add CSV Tool Report
+| 
+* commit 9efa6e540b49b9e01515a652d1a5f70172689c31
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Tue Oct 5 11:40:20 2021 -0700
+| 
+|     Email settings are optional in the config
+| 
+* commit 8854b2c5db1291dccc9ab07265941e3b32d6a8c1
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Wed Sep 29 11:43:53 2021 -0700
+| 
+|     Update ramtv3_manual.md
+| 
+* commit e9698250f4d00d8aa12ab961c2980186993b46fe
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Wed Sep 29 11:43:22 2021 -0700
+| 
+|     Add support for sending emails to multiple users
+| 
+* commit 1583a171c06dd080c26d59cb3c5987dbca097a62
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Tue Sep 28 16:45:25 2021 -0700
+| 
+|     Add emailer. User Story 588627
+| 
+* commit 090cff08cfdeb6c66d1fe1c64912f30a5e97d292
+| Author: Prichard <M25564@ngc.authority>
+| Date:   Wed Sep 15 08:13:34 2021 -0700
+| 
+|     Update test_csv_manager.py
+
