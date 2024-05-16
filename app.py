@@ -16,6 +16,8 @@ def index():
     """
     Route for the main page of the application.
     It handles both GET and POST requests.
+    Keep in mind that this route is only to be used if only loading from a csv file, in this case
+    it is not needed since we are loading from a database. If no database is around, then use the code here to load it
     """
     if request.method == 'POST':
         # Get the name of the button clicked from the form data
@@ -59,36 +61,52 @@ class User(db.Model):
     # It is an integer column.
     daemon_name = db.Column(db.Integer)
 
-    # The 'name' column stores the name of the user.
     # It is a string column with a maximum length of 50 characters.
     feature_name = db.Column(db.String(50))
 
-    # The 'age' column stores the age of the user.
+
     # It is a string column with a maximum length of 50 characters.
     licenses_total = db.Column(db.String(50))
 
-    # The 'address' column stores the address of the user.
+
     # It is a string column with a maximum length of 50 characters.
     licenses_total_in_use = db.Column(db.String(50))
 
-    # The 'salary' column stores the salary of the user.
+
     # It is a string column with a maximum length of 50 characters.
     licenses_total = db.Column(db.String(50))
 
     licenses_used_by_user = db.Column(db.Integer)
 
+    expiration_date = db.Column(db.String)
 
-@app.route('/table_data/ramt_license_usage')
+
+@app.route('/table_data/ramt_license_usage', methods=['GET'])
 def table_data():
     users = User.query.all()
     data = [
         {
-            'license_usage_id': user.license_usage_id,
-            'daemon_name': user.daemon_name,
-            'feature_name': user.feature_name,
-            'licenses_total': user.licenses_total,
-            'licenses_total_in_use': user.licenses_total_in_use,
-            'licenses_used_by_user': user.licenses_used_by_user,
+            # Map each User object to a dictionary containing its attributes.
+            #
+            # :return: A list of dictionaries representing the User objects.
+            # Each dictionary contains the attributes 'license_usage_id',
+            # 'daemon_name', 'feature_name', 'licenses_total',
+            # 'licenses_total_in_use', and 'licenses_used_by_user'.
+            # The values of these attributes are the corresponding attributes of the User object.
+            "license_usage_id": user.license_usage_id,
+            # The daemon name of the user.
+            "daemon_name": user.daemon_name,
+            # The feature name of the user.
+            "feature_name": user.feature_name,
+            # The total number of licenses of the user.
+            "licenses_total": user.licenses_total,
+            # The number of licenses used by the user.
+            "licenses_total_in_use": user.licenses_total_in_use,
+            # The number of licenses used by the user.
+            "licenses_used_by_user": user.licenses_used_by_user,
+
+            "expiration_date": user.expiration_date,
+
         }
         for user in users
     ]

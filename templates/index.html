@@ -35,6 +35,7 @@
                         <option value="licenses_total_in_use">Max Licenses Used</option>
                         <option value="licenses_used_by_user">Average Licenses Used</option>
                         <option value="unique_users">Unique Users</option>
+                        <option value="expiration_date">Expiration Date</option>
                     </select>
                 </div>
                 <div class="input-group-append">
@@ -54,12 +55,18 @@
                         <th>MAX LICENSES USED</th>
                         <th>AVERAGE LICENSES USED</th>
                         <th>UNIQUE USERS</th>
+                        <th>EXPIRATION DATE</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     <!-- Table rows will be dynamically inserted here -->
                 </tbody>
             </table>
+            <div id="loading-animation" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
         </section>
 
     </main>
@@ -70,75 +77,89 @@
     </footer>
 
     <script>
+        let isLoading = false;
+
+        /**
+         * Fetches table data based on search and sorting criteria
+         */
         function fetchTableData() {
+            // Get search input value and convert to lowercase
             const searchInput = document.getElementById('searchInput');
             const searchTerm = searchInput.value.toLowerCase();
 
+            // Get sort criteria
             const sortBy = document.getElementById('sortBy').value;
             const sortOrder = document.getElementById('sortOrder').value;
 
+            // Construct URL
             const url = `/table_data/ramt_license_usage${searchTerm ? `?search=${searchTerm}` : ''}${sortBy ? `?sortBy=${sortBy}&sortOrder=${sortOrder}` : ''}`;
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.querySelector('#table-body');
-                    tableBody.innerHTML = ''; // Clear existing data
+            // Check if already loading data
+            if (!isLoading) {
+                isLoading = true;
+                document.getElementById('loading-animation').style.display = 'block';
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear existing table data
+                        const tableBody = document.querySelector('#table-body');
+                        tableBody.innerHTML = '';
 
-                    data.sort((a, b) => {
-                        if (sortBy === 'daemon_name') {
-                            const nameA = a.daemon_name.toLowerCase();
-                            const nameB = b.daemon_name.toLowerCase();
-                            if (nameA < nameB) {
-                                return sortOrder === 'asc' ? -1 : 1;
+                        // Sort data based on criteria
+                        data.sort((a, b) => {
+                            // Sort by daemon name
+                            if (sortBy === 'daemon_name') {
+                                const nameA = a.daemon_name.toLowerCase();
+                                const nameB = b.daemon_name.toLowerCase();
+                                return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' }) * (sortOrder === 'asc' ? 1 : -1);
                             }
-                            if (nameA > nameB) {
-                                return sortOrder === 'asc' ? 1 : -1;
+                            // Sort by feature name
+                            else if (sortBy === 'feature_name') {
+                                const nameA = a.feature_name.toLowerCase();
+                                const nameB = b.feature_name.toLowerCase();
+                                return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' }) * (sortOrder === 'asc' ? 1 : -1);
                             }
-                            return 0;
-                        } else if (sortBy === 'feature_name') {
-                            const nameA = a.feature_name.toLowerCase();
-                            const nameB = b.feature_name.toLowerCase();
-                            if (nameA < nameB) {
-                                return sortOrder === 'asc' ? -1 : 1;
-                            }
-                            if (nameA > nameB) {
-                                return sortOrder === 'asc' ? 1 : -1;
-                            }
-                            return 0;
-                        } else if (sortBy) {
-                            const valueA = a[sortBy].toLowerCase();
-                            const valueB = b[sortBy].toLowerCase();
-                            if (valueA < valueB) {
-                                return sortOrder === 'asc' ? -1 : 1;
-                            }
-                            if (valueA > valueB) {
-                                return sortOrder === 'asc' ? 1 : -1;
-                            }
-                            return 0;
-                        }
-                        return 0; // Default sorting order
-                    });
 
-                    data.forEach(row => {
-                        if (searchTerm && !row.daemon_name.toLowerCase().includes(searchTerm) && !row.feature_name.toLowerCase().includes(searchTerm)) {
-                            return; // Skip rows that don't match the search term
-                        }
+                            // Sort by expiration_date
+                            else if (sortBy === 'expiration_date') {
+                                const dateA = new Date(a.expiration_date);
+                                const dateB = new Date(b.expiration_date);
+                                return (dateA - dateB) * (sortOrder === 'asc' ? 1 : -1);
+                            }
+                            // Sort by other criteria
+                            else if (sortBy) {
+                                const valueA = a[sortBy].toLowerCase();
+                                const valueB = b[sortBy].toLowerCase();
+                                return valueA.localeCompare(valueB, undefined, { sensitivity: 'base' }) * (sortOrder === 'asc' ? 1 : -1);
+                            }
+                            return 0; // Default sorting order
+                        });
 
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${row.license_usage_id}</td>
-                            <td>${row.daemon_name}</td>
-                            <td>${row.feature_name}</td>
-                            <td>${row.licenses_total}</td>
-                            <td>${row.licenses_total_in_use}</td>
-                            <td>${row.licenses_used_by_user}</td>
-                            <td>${row.unique_users}</td>
-                        `;
-                        tableBody.appendChild(tr);
-                    });
-                })
-                .catch(error => console.error('Failed to fetch data:', error));
+                        // Insert data rows into table
+                        data.forEach(row => {
+                            // Skip rows that don't match search term
+                            if (searchTerm && !row.daemon_name.toLowerCase().includes(searchTerm) && !row.feature_name.toLowerCase().includes(searchTerm)) {
+                                return;
+                            }
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${row.license_usage_id}</td>
+                                <td>${row.daemon_name}</td>
+                                <td>${row.feature_name}</td>
+                                <td>${row.licenses_total}</td>
+                                <td>${row.licenses_total_in_use}</td>
+                                <td>${row.licenses_used_by_user}</td>
+                                <td>${row.unique_users}</td>
+                                <td>${row.expiration_date}</td>
+                            `;
+                            tableBody.appendChild(tr);
+                        });
+                        isLoading = false;
+                        document.getElementById('loading-animation').style.display = 'none';
+                    })
+                    .catch(error => console.error('Failed to fetch data:', error));
+            }
         }
 
         function updateTime() {
@@ -156,4 +177,3 @@
 
 </body>
 </html>
-
