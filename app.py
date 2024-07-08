@@ -87,7 +87,7 @@ def table_data():
     data = [
         {
             # Map each User object to a dictionary containing its attributes.
-            #
+            
             # :return: A list of dictionaries representing the User objects.
             # Each dictionary contains the attributes 'license_usage_id',
             # 'daemon_name', 'feature_name', 'licenses_total',
